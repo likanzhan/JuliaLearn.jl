@@ -1,3 +1,1 @@
-# JuliaLearn
- 
- Some codes I wrote.
+# JuliaLearn.jl
