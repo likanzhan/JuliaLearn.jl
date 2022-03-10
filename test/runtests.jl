@@ -1,6 +1,6 @@
-using PlotTopography
+using JuliaLearn
 using Test
 
-@testset "PlotTopography.jl" begin
+@testset "JuliaLearn.jl" begin
     # Write your tests here.
 end
