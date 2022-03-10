@@ -1,5 +1,9 @@
+using Makie
+import Statistics: mean
+import GMT: triangulate
+
 """
-    plot_topography(channelList::Vector{String}, channelValues::Vector{Number}; gridSize = 1000)
+    PlotTopography(channelList::Vector{String}, channelValues::Vector{Number}; gridSize = 1000)
 
 Plots a topographical map of the head over the desired points 
 given by `channelList` and their assigned `channelValues`, 
@@ -9,10 +13,10 @@ with default grid size being `gridSize = 1000`.
 ```jldoctest
 channelExamples = String["Fpz", "Fp1", "Fp2", "AF3", "AF4", "AF7", "AF8", "Fz", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "FCz", "FC1", "FC2", "FC3", "FC4", "FC5", "FC6", "FT7", "FT8", "Cz", "C1", "C2", "C3", "C4", "C5", "C6", "T7", "T8", "CP1", "CP2", "CP3", "CP4", "CP5", "CP6", "TP7", "TP8", "Pz", "P3", "P4", "P5", "P6", "P7", "P8", "POz", "PO3", "PO4", "PO5", "PO6", "PO7", "PO8", "Oz", "O1", "O2"];
 
-plot_topography(channelExamples, rand(length(channelExamples)))
+PlotTopography(channelExamples, rand(length(channelExamples)))
 ```
 """
-function plot_topography(channelList::Vector{String}, channelValues::Vector{T}; gridSize = 1000) where T <: Number
+function PlotTopography(channelList::Vector{String}, channelValues::Vector{T}; gridSize = 1000) where T <: Number
 
     # Basic checking
     length(channelList) == length(channelValues) || error(

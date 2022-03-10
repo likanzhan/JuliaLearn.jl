@@ -1,12 +1,15 @@
 module JuliaLearn
 
-# plot_topography
-using Makie
-import Statistics: mean
-import GMT: triangulate
+# PrintSourceCode
+export PrintSourceCode
+include("PrintSourceCode.jl")
 
-export plot_topography
+# CombineScreenShots
+export CombineScreenShots
+include("CombineScreenShots.jl")
 
-include("plot_topography.jl")
+# PlotTopography
+export PlotTopography
+include("PlotTopography.jl")
 
 end # module
