@@ -1,12 +1,12 @@
 import FileIO: load, save
 import ImageTransformations: imresize
-import Dates: now
+import Dates: today
 # import ImageView: imshow # imshow(vcat_img)
 
 function CombineScreenShots(;
     imgs_dir = joinpath(homedir(), "Desktop"),
     logo_dir = joinpath(homedir(), "Documents/Meta/Technique/Website/logo/Likan.Zhan.Weibo.jpeg"),
-    outs_dir = joinpath(imgs_dir, string("Combined-", now(), ".jpg"))
+    outs_dir = joinpath(imgs_dir, string("Combined-", today(), ".jpg"))
     )
 
     img_list = filter(Base.Fix1(occursin, "Screen Shot"), readdir(imgs_dir, join = true) )
@@ -30,4 +30,6 @@ function CombineScreenShots(;
     save(outs_dir, vcat_img)
 
     rm.(img_list)
+
+    @info "Image Created: $outs_dir"
 end # function

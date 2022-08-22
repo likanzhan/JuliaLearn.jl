@@ -12,4 +12,12 @@ include("CombineScreenShots.jl")
 export PlotTopography
 include("PlotTopography.jl")
 
+# jnw2pdf
+export jnw2pdf, jnw3pdf
+include("jnw2pdf.jl")
+
+# CheckOrthogonality
+export CheckOrthogonality
+include("CheckOrthogonality.jl")
+
 end # module
