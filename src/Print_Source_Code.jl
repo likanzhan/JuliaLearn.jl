@@ -9,10 +9,7 @@ and store it in `RootDir`.
 PrintSourceCode("LinearAlgebra")
 ```
 """
-function PrintSourceCode(
-    PackageName::T;
-    RootDir::T = pwd()
-) where {T<:AbstractString}
+function PrintSourceCode(PackageName::T; RootDir::T = pwd()) where {T<:AbstractString}
 
     ## 1. Retrieve package directory
     if PackageName == "Base"
@@ -26,10 +23,10 @@ function PrintSourceCode(
         FileName = "Base"
         FileVersion = string(VERSION)
     elseif occursin("stdlib", PackagePath)
-        FileName    = basename(dirname(PackagePath))
+        FileName = basename(dirname(PackagePath))
         FileVersion = basename(dirname(dirname(PackagePath)))
     else
-        FileName    = basename(dirname(dirname(PackagePath)))
+        FileName = basename(dirname(dirname(PackagePath)))
         FileVersion = basename(dirname(PackagePath))
     end
 
@@ -43,10 +40,10 @@ function PrintSourceCode(
         end
 
         PackageFile = PackageName * ".jl"
-        
+
         dst = String[]
         push!(dst, joinpath(PackagePath, PackageFile))
-        
+
         for lv1 in readlines(joinpath(PackagePath, PackageFile))
             flv1 = match(r"include\(\s*?\"(.*?)\"\)$", lv1)
             if !isnothing(flv1)
@@ -56,13 +53,13 @@ function PrintSourceCode(
                     folder = splitdir(cpt1)[1]
                     for lv2 in readlines(joinpath(PackagePath, cpt1))
                         flv2 = match(r"include\(\s*?\"(.*?)\"\)$", lv2)
-                        isnothing(flv2) || 
-                        push!(dst, joinpath(PackagePath, folder, (flv2.captures)[]))
+                        isnothing(flv2) ||
+                            push!(dst, joinpath(PackagePath, folder, (flv2.captures)[]))
                     end
                 end
             end
         end
-        
+
         return dst
     end
 
@@ -92,7 +89,12 @@ function PrintSourceCode(
             fileRep = replace(fileRep, r"^/" => "")
             fileRep = replace(fileRep, "_" => "\\_")
             println(io, "\\section{", joinpath(fileRep), "}")
-            println(io, "\\inputminted{julia}{", joinpath(PackagePath, file), "}")
+            println(
+                io,
+                "\\inputminted[fontsize=\\scriptsize]{julia}{",
+                joinpath(PackagePath, file),
+                "}",
+            )
             println(io, "\\newpage", "\n")
         end
         println(io, "\n", post)

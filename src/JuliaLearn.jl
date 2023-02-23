@@ -2,22 +2,30 @@ module JuliaLearn
 
 # PrintSourceCode
 export PrintSourceCode
-include("PrintSourceCode.jl")
+include("Print_Source_Code.jl")
 
 # CombineScreenShots
 export CombineScreenShots
-include("CombineScreenShots.jl")
+include("Combine_Screen_Shots.jl")
 
 # PlotTopography
 export PlotTopography
-include("PlotTopography.jl")
+include("Plot_Topography.jl")
 
 # jnw2pdf
 export jnw2pdf, jnw3pdf
-include("jnw2pdf.jl")
+include("Jnw2pdf.jl")
+
+# Simulate data and check hypothesis being tested
+export SimulateData, Hypothesis
+include("Simulate_Data.jl")
 
 # CheckOrthogonality
 export CheckOrthogonality
-include("CheckOrthogonality.jl")
+include("Check_Orthogonality.jl")
+
+# Update LaTeX Workshop for VSCode
+export Update_James, Latex_Snippets
+include("LaTeX_Workshop.jl")
 
 end # module
