@@ -36,6 +36,13 @@ const juliaweaveinline =
         "description" => "julia weave inline",
     )
 
+const frameItemize = 
+    "frameItemize" => OrderedDict{String,Any}(
+        "prefix" => "FRIT",
+        "body" => "\\begin{frame}\n\t\\frametitle{\${1:<title>}}\n\n\t\\begin{itemize}[<+(1)->]\n\t\\item \${0:\${TM_SELECTED_TEXT}}\n\t\\end{itemize}\n\n\\end{frame}",
+        "description" => "frame + itemize",
+    )
+
 const PreambleArticle =
     "PreambleArticle" => OrderedDict{String,Any}(
         "prefix" => "PRAR",
@@ -66,7 +73,7 @@ end
 ### 4. Function to update LaTeX engine
 function Update_Latex_Engine!(current_james)
     original_specification = joinpath(current_james, "package_original.json")
-    current_specification = joinpath(current_james, "package.json")
+    current_specification  = joinpath(current_james, "package.json")
     isfile(original_specification) || mv(current_specification, original_specification)
 
     open(current_specification, "w") do current_data
@@ -74,6 +81,11 @@ function Update_Latex_Engine!(current_james)
             JSON.parsefile(original_specification; dicttype = DataStructures.OrderedDict)
         latex_recipes =
             Latex_Dict["contributes"]["configuration"]["properties"]["latex-workshop.latex.recipes"]["default"]
+        latex_recipes_new = latex_recipes[[4, 7, 6, 1:3..., 5, 6, 8:end...]]  # Correct order to use xelatex        
+
+        empty!(latex_recipes)
+        append!(latex_recipes, latex_recipes_new)
+        
         latex_tools =
             Latex_Dict["contributes"]["configuration"]["properties"]["latex-workshop.latex.tools"]["default"]
 
@@ -106,10 +118,11 @@ function Update_Latex_Snippets!(current_james)
             JSON.parsefile(original_latex_snippet; dicttype = DataStructures.OrderedDict)
 
         categories = [first(x) for x in Snippet_Dict]
-        "juliaweavechunk" in categories || push!(Snippet_Dict, juliaweavechunk)
+        "juliaweavechunk"  in categories || push!(Snippet_Dict, juliaweavechunk)
         "juliaweaveinline" in categories || push!(Snippet_Dict, juliaweaveinline)
-        "PreambleArticle" in categories || push!(Snippet_Dict, PreambleArticle)
-        "PreambleBeamer" in categories || push!(Snippet_Dict, PreambleBeamer)
+        "frameItemize"     in categories || push!(Snippet_Dict, frameItemize)
+        "PreambleArticle"  in categories || push!(Snippet_Dict, PreambleArticle)
+        "PreambleBeamer"   in categories || push!(Snippet_Dict, PreambleBeamer)
 
         JSON3.pretty(current_data, JSON3.write(Snippet_Dict))
     end
