@@ -110,7 +110,7 @@ end
 ### 5. Function to update LaTeX snippets
 function Update_Latex_Snippets!(current_james)
     original_latex_snippet = joinpath(current_james, "data", "latex-snippet_original.json")
-    current_latex_snippet = joinpath(current_james, "data", "latex-snippet.json")
+    current_latex_snippet = joinpath(current_james,  "data", "latex-snippet.json")
     isfile(original_latex_snippet) || mv(current_latex_snippet, original_latex_snippet)
 
     open(current_latex_snippet, "w") do current_data

@@ -75,10 +75,11 @@ Convert a jnw file into a pdf file
 """
 function jnw2pdf(filepath; doctype = "minted2pdf")
     filepath, filename, filesremove = findRelevantFiles(filepath)
+    figure_path = string(filename, "_Figures")
     weave(
         filepath,
         cache = :off,
-        fig_path = string(filename, "_Figures"),
+        fig_path = figure_path,
         doctype = doctype, # minted2pdf ; texminted
         latex_cmd = MY_LATEX_CMD,
     )
@@ -88,7 +89,8 @@ function jnw2pdf(filepath; doctype = "minted2pdf")
     catch
         "Cannot remove Files"
     end
-
+    
+    try rm(figure_path) catch; "文件夹 $figure_path 有图片" end
 end
 
 function findRelevantFiles(filepath)
