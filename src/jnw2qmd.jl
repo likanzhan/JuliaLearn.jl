@@ -1,0 +1,37 @@
+function jnw2qmd(jnwfile; qmdfile = joinpath(dirname(jnwfile), first(splitext(basename(jnwfile))) * ".qmd"))
+    EquationCell = Regex("(\\\\begin\\{equation\\*?\\}((.*\\n)*?)\\\\end\\{equation\\*?\\})")
+    MintedCell   = Regex("\\\\begin\\{minted\\}\\{julia\\}((.*\\n)*?)\\\\end\\{minted\\}")
+    MintedInline = Regex("\\\\mintinline\\{julia\\}\\{((\\{(?1)\\}|[^{}])*)\\}")
+    JuliaCell    = Regex("<<.*?>>=\\n((.*\\n)*?)@")
+    WebLink      = Regex("\\\\href\\{(.*)\\}\\{(.*)\\}")
+    Chapter      = Regex("\\\\chapter\\{((\\{(?1)\\}|[^{}])*)\\}")
+    Section      = Regex("\\\\section\\{((\\{(?1)\\}|[^{}])*)\\}")
+    SubSection   = Regex("\\\\subsection\\{((\\{(?1)\\}|[^{}])*)\\}")
+    SubSubSection= Regex("\\\\subsubsection\\{((\\{(?1)\\}|[^{}])*)\\}")
+    TextIt       = Regex("\\\\textit\\{((\\{(?1)\\}|[^{}])*)\\}")
+    Textbf       = Regex("\\\\textbf\\{((\\{(?1)\\}|[^{}])*)\\}")
+    Quote        = Regex("``(.*)(``)*?")
+    Graphics     = Regex("\\\\includegraphics.*\\{(.*?)\\}")
+    Inputminted  = Regex("(\\%.\\\\inputminted\\{julia\\}.*\\})")
+
+    open(qmdfile, "w") do io
+        sn = read(jnwfile, String)
+        # sn = replace(sn, Quote         => s" *\1* ")
+        sn = replace(sn, EquationCell  => s"$$\n\2\n$$")
+        sn = replace(sn, JuliaCell     => s"```{julia}\n\1```\n")
+        sn = replace(sn, MintedInline  => s" `\1` ")
+        sn = replace(sn, MintedCell    => s"```julia\n\1\n````")
+        sn = replace(sn, WebLink       => s"[\2](\1)")
+
+        sn = replace(sn, Chapter       => s"# \1")
+        sn = replace(sn, Section       => s"## \1")
+        sn = replace(sn, SubSection    => s"### \1")
+        sn = replace(sn, SubSubSection => s"#### \1")
+        sn = replace(sn, TextIt        => s" *\1* ")
+        sn = replace(sn, Textbf        => s" **\1** ")
+        sn = replace(sn, Graphics      => s" ![](\1) ")
+        sn = replace(sn, Inputminted   => s" <!-- \1 --> ")
+
+        write(io, sn)
+    end
+end

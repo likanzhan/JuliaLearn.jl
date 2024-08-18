@@ -1,7 +1,7 @@
 using Weave, Mustache
 import FileWatching: watch_file
-using Markdown
-import Markdown: latex, Table, wrapblock, latexinline
+# using Markdown
+# import Markdown: latex, Table, wrapblock, latexinline
 
 ## change latex cmd, ``-8bit'': correctly show tab
 # const MY_LATEX_CMD = ["xelatex", "-8bit", "-shell-escape", "-synctex=1", "-interaction=nonstopmode", "-file-line-error"]
@@ -32,56 +32,40 @@ function __init__()
     Weave.register_format!(
         "minted2pdf",
         Weave.LaTeX2PDF(
-            primaryformat = Weave.LaTeXMinted(
-                codestart = "\\begin{compactminted}[texcomments = false, mathescape = true, bgcolor = GhostWhite, frame = none]{julia}",
-                codeend = "\\end{compactminted}",
-                outputstart = "\\begin{compactminted}[texcomments = false, mathescape = true, bgcolor = GhostWhite, frame = leftline]{julia}",
-                outputend = "\\end{compactminted}",
+            primaryformat=Weave.LaTeXMinted(
+                codestart="\\begin{minted}[texcomments = false, mathescape = true, escapeinside=||, bgcolor=blue!5!white, frame = none]{julia}",
+                codeend="\\end{minted}",
+                outputstart="\\begin{minted}[texcomments = false, mathescape = true, escapeinside=||, bgcolor=blue!3!white, frame = leftline]{julia}",
+                outputend="\\end{minted}",
             ),
         ),
     )
 end
 
 ## Define methods for `LaTeXMinted`
-Weave.unicode2latex(docformat::Weave.LaTeXMinted, s, escape = false) = s
+Weave.unicode2latex(docformat::Weave.LaTeXMinted, s, escape=false) = s
 Weave.render_chunk(docformat::Weave.LaTeXMinted, chunk::Weave.DocChunk) =
     join((Weave.render_inline(c) for c in chunk.content))
 Weave.render_doc(docformat::Weave.LaTeXMinted, body, doc) =
-    Mustache.render(mt"{{{ :body }}}"; body = body)
-
-"""
-    jnw3pdf(filepath)
-
-Convert a jnw file into a pdf file when `filepath` is changed
-"""
-function jnw3pdf(filepath)
-    filepath, filename, filesremove = findRelevantFiles(filepath)
-    while true
-        event = watch_file(filepath)
-        if event.changed
-            try
-                jnw2pdf(filepath)
-            catch err
-                @warn("Error happens:\n$err")
-            end
-        end
-    end
-end
+    Mustache.render(
+        mt"{{{ :bodyN }}}";
+        bodyN="\\RequirePackage{minted}" * body
+    )
 
 """
     jnw2pdf(filepath)
 
 Convert a jnw file into a pdf file
 """
-function jnw2pdf(filepath; doctype = "minted2pdf")
+function jnw2pdf(filepath; doctype="minted2pdf")
     filepath, filename, filesremove = findRelevantFiles(filepath)
     figure_path = string(filename, "_Figures")
     weave(
         filepath,
-        cache = :off,
-        fig_path = figure_path,
-        doctype = doctype, # minted2pdf ; texminted
-        latex_cmd = MY_LATEX_CMD,
+        cache=:off,
+        fig_path=figure_path,
+        doctype=doctype, # minted2pdf ; texminted
+        latex_cmd=MY_LATEX_CMD,
     )
 
     try
@@ -89,8 +73,12 @@ function jnw2pdf(filepath; doctype = "minted2pdf")
     catch
         "Cannot remove Files"
     end
-    
-    try rm(figure_path) catch; "文件夹 $figure_path 有图片" end
+
+    try
+        rm(figure_path)
+    catch
+        "文件夹 $figure_path 有图片"
+    end
 end
 
 function findRelevantFiles(filepath)
@@ -113,6 +101,26 @@ function findRelevantFiles(filepath)
     ]
     filesremove = joinpath.(dir, string.(filename, ".", RemveExtensions))
     return filepath, filename, filesremove
+end
+
+#=
+"""
+    jnw3pdf(filepath)
+
+Convert a jnw file into a pdf file when `filepath` is changed
+"""
+function jnw3pdf(filepath)
+    filepath, filename, filesremove = findRelevantFiles(filepath)
+    while true
+        event = watch_file(filepath)
+        if event.changed
+            try
+                jnw2pdf(filepath)
+            catch err
+                @warn("Error happens:\n$err")
+            end
+        end
+    end
 end
 
 #################################
@@ -270,3 +278,4 @@ function _show(
     write(io, "\\end{tabular}\n")
     write(io, "\\end{table}\n")
 end
+=#

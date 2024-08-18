@@ -3,6 +3,7 @@ using JSON3, JSON, DataStructures
 ### 1. Define constants
 ### 1.1. Define jnw2pdf recipe and add `-shell-escape` to xelatex engine
 const jnw2pdf_recipe = ["jnw2pdf"]
+const rnw2pdf_recipe = ["rnw2tex", "xelatexmk"]
 
 const jnw2pdf_tool = OrderedDict{String,Any}(
     "name" => "jnw2pdf",
@@ -92,6 +93,8 @@ function Update_Latex_Engine!(current_james)
         for recipe in latex_recipes
             recipe["name"] == "Compile Jnw files" &&
                 setindex!(recipe, jnw2pdf_recipe, "tools")
+            recipe["name"] == "Compile Rnw files" &&
+                setindex!(recipe, rnw2pdf_recipe, "tools")
         end
 
         "jnw2pdf" in [dict["name"] for dict in latex_tools] || push!(latex_tools, jnw2pdf_tool)

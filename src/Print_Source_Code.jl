@@ -75,6 +75,7 @@ function PrintSourceCode(PackageName::T; RootDir::T = pwd()) where {T<:AbstractS
     pre = """
     \\documentclass[10pt]{article}
     \\usepackage{/Users/likanzhan/Documents/Meta/Technique/LaTex/Preamble_Article}
+    \\usepackage{minted}
     \\begin{document}
     \\tableofcontents
     \\newpage
