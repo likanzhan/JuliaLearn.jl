@@ -154,7 +154,7 @@ function Latex_Snippets()
 
 end
 
-### 6. Get the extention directory of the latex James-Yu Latex under vscode.
+### 6. Get the extension directory of the latex James-Yu Latex under vscode.
 function Update_James()
     current_james = Get_Current_James()
     Update_Latex_Engine!(current_james)

@@ -88,7 +88,7 @@ Reference
 """
 function synthesize_audio(text, file_name = missing; config = "config.yaml")
 
-    # 1. Load "config.yaml" file and retrie parameters
+    # 1. Load "config.yaml" file and retrieve parameters
     config = YAML.load_file(config)
     APPID, APIKey, APISecret = config["APPID"], config["APIKey"], config["APISecret"]
     newparameters = filter(((k, v), ) -> k .∈ Ref(keys(business)), config)
